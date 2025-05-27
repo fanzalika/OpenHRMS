@@ -34,7 +34,8 @@ class HrPayslipLine(models.Model):
     def _get_partner_id(self, credit_account):
         """Get partner_id of slip line to use in account_move_line."""
         # use partner of salary rule or fallback on employee's address
-        register_partner_id = self.salary_rule_id.register_id.partner_id
+        # TODO: address_id is work address, not ideal but better than journal without partner_id
+        register_partner_id = self.salary_rule_id.register_id.partner_id or self.employee_id.address_id
         if credit_account:
             if (register_partner_id or
                     self.salary_rule_id.account_credit_id.account_type in (
